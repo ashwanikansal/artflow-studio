@@ -1,0 +1,20 @@
+[
+  {
+    "id": "post_1",
+    "type": "reel",
+    "caption": "Tried a new anime portrait style today 🖤 Let me know which character I should do next!",
+    "hashtags": ["#animeart", "#digitalart", "#portrait"],
+    "created_at": "2024-05-10",
+    "likes": 120,
+    "comments": 15
+  },
+  {
+    "id": "post_2",
+    "type": "image",
+    "caption": "Monochrome sketch session. Just me, coffee, and lines.",
+    "hashtags": ["#sketching", "#blackandwhiteart"],
+    "created_at": "2024-06-02",
+    "likes": 80,
+    "comments": 7
+  }
+]

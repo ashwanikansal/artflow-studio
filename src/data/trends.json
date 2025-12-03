@@ -1,0 +1,45 @@
+{
+  "songs": [
+    {
+      "name": "Lonely Nights",
+      "artist": "Lo-fi Beats",
+      "mood": "emotional",
+      "platform": "instagram",
+      "link": "https://example.com/audio/lonely-nights",
+      "tags": ["lofi", "slow", "moody", "anime"]
+    },
+    {
+      "name": "Cozy Winter",
+      "artist": "Chillhop Artist",
+      "mood": "cozy",
+      "platform": "instagram",
+      "link": "https://example.com/audio/cozy-winter",
+      "tags": ["cozy", "warm", "winter"]
+    },
+    {
+      "name": "Hype Drop",
+      "artist": "Beat Maker",
+      "mood": "energetic",
+      "platform": "instagram",
+      "link": "https://example.com/audio/hype-drop",
+      "tags": ["fast", "hype", "edit"]
+    }
+  ],
+  "visual_trends": [
+    {
+      "name": "Draw this in your style",
+      "description": "Redraw a popular character or pose in your own style, tagging the original creator.",
+      "tags": ["challenge", "community", "anime"]
+    },
+    {
+      "name": "Before / After Glow Up",
+      "description": "Show an old drawing vs a new redraw with improvement.",
+      "tags": ["glowup", "beforeafter", "progress"]
+    },
+    {
+      "name": "Single Color Mood Piece",
+      "description": "Create a monochrome piece using shades of a single color (e.g., blue sadness, red anger).",
+      "tags": ["monochrome", "mood", "color"]
+    }
+  ]
+}

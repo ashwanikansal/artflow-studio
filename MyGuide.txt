@@ -1,0 +1,21 @@
+Phase 1:
+
+1. Created a local chroma Db, Knowledge base from local data (posts.json & style_notes.md)
+2. Created a RAG on this Knowledge base.
+3. Ideation Module: Generate art ideas based on local Knowledge base.
+    Challenges:
+        a. How to get proper json format output? According to our ArtIdeaSet?
+        b. After getting json, how to make sure, LLM always return complete ideas? and not truncate them inbetween?
+
+4. Generate Captions, hastags, reel making tips for the selected idea. Same challenges as in step 3.
+5. Adding Engagement Assitant - generate thoughtful reply for comments (local json)
+6. Adding a sqlite db to log all the generated ideas, generated captions with hastags, generated replies for comments.
+    Adding functionality to access recent ideas, recent comment replies, and any idea captions and hastags. 
+7. Adding a streamlit UI for these features.
+
+Phase 2:
+
+1. Now we will will add a trend miner here, which checks the song or visual trends currently going on. For now they will pick trends from local storage.
+    Earlier our RAG based drawing idea generator, used only our RAG context.
+    But now it will use RAG context + trends. So adding trends logic to ideation_module.
+

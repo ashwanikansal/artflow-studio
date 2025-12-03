@@ -1,0 +1,12 @@
+langchain
+langgraph
+chromadb
+sqlmodel
+pydantic
+python-dotenv
+langchain_huggingface
+langchain_community
+langchain_chroma
+sentence-transformers
+
+streamlit
