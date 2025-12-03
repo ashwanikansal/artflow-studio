@@ -146,3 +146,86 @@ Phase 1 & 2 focus on:
     *   dotenv for config
         
     *   Custom modules for trends and “Instagram service”
+
+
+### **🧬 High-Level Architecture**
+
+```
+
+                        ┌──────────────────────────┐
+                        │        Streamlit UI      │
+                        │  - Ideas & Captions      │
+                        │  - Engagement Assistant  │
+                        │  - History Viewer        │
+                        └────────────┬─────────────┘
+                                     │
+                                     v
+                        ┌──────────────────────────┐
+                        │        Application       │
+                        │  (FastAPI-like logic in  │
+                        │   plain Python modules)  │
+                        └────────────┬─────────────┘
+       ┌─────────────────────────────┼────────────────────────────────┐
+       │                             │                                │
+       v                             v                                v
+┌────────────────┐        ┌───────────────────────┐        ┌─────────────────────┐
+│ RAG Engine     │        │ Trend Service         │        │ Analytics Engine    │
+│ - Chroma       │        │ - Local trends.json   │        │ - posts.json        │
+│ - Embeddings   │        │   (songs, challenges) │        │ - basic stats:      │
+│ - Style notes  │        │                       │        │   likes, hashtags   │
+└──────┬─────────┘        └────────────┬──────────┘        └──────────┬──────────┘
+       │                               │                              │
+       v                               v                              v
+┌──────────────────────────┐   ┌──────────────────────────┐   ┌──────────────────────┐
+│ Content Ideation Module  │   │ Caption Generator        │   │ Engagement Assistant │
+│ - generate_art_ideas()   │   │ - generate captions      │   │ - generate replies   │
+│ - uses: RAG + trends +   │   │   + hashtags + tips      │   │   to comments        │
+│         analytics        │   └──────────────────────────┘   └──────────────────────┘
+└─────────┬────────────────┘
+          │
+          v
+ ┌────────────────────┐
+ │ SQLite Database    │
+ │ - ideas            │
+ │ - captions         │
+ │ - comments         │
+ │ - reply suggestions│
+ └────────────────────┘
+
+```
+
+There’s also an instagram.service module that currently works with local data (posts.json + DB comments) but is designed to be swapped to the real Instagram Graph API later without changing the rest of the code.
+
+### 🚧 Future Work (Phase 3+)
+
+You can list these in the README:
+
+*   Replace local “Instagram service” with **Instagram Graph API**:
+    
+    *   get\_my\_posts()
+        
+    *   get\_post\_comments(post\_id)
+        
+    *   get\_post\_insights(post\_id)
+        
+*   Replace local trends.json with:
+    
+    *   **Spotify API** playlists for trending/lo-fi songs.
+        
+*   Introduce **LangGraph** for:
+    
+    *   Multi-step workflows:
+        
+        *   RAG → Trends → Analytics → Ideas → User selection → Captions.
+            
+    *   Human-in-the-loop nodes (pause after ideas for user choice).
+        
+*   Add more advanced analytics:
+    
+    *   Content-type performance (timelapse vs static)
+        
+    *   Hashtag performance, not just frequency.
+        
+*   Add scheduling logic (just suggestions, not auto-post):
+    
+    *   “Best time windows” to post based on your past data.
