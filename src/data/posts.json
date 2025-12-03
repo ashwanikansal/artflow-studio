@@ -16,5 +16,95 @@
     "created_at": "2024-06-02",
     "likes": 80,
     "comments": 7
+  },
+  {
+    "id": "post_32",
+    "type": "image",
+    "caption": "Sunset over the city skyline. Colors like fire.",
+    "hashtags": ["#sunset", "#cityscape", "#photography"],
+    "created_at": "2024-06-01",
+    "likes": 120,
+    "comments": 15
+  },
+  {
+    "id": "post_23",
+    "type": "image",
+    "caption": "Monochrome sketch session. Just me, coffee, and lines.",
+    "hashtags": ["#sketching", "#blackandwhiteart"],
+    "created_at": "2024-06-02",
+    "likes": 80,
+    "comments": 7
+  },
+  {
+    "id": "post_3",
+    "type": "reel",
+    "caption": "Quick timelapse of my morning painting routine.",
+    "hashtags": ["#art", "#timelapse", "#creativeprocess"],
+    "created_at": "2024-06-03",
+    "likes": 95,
+    "comments": 12
+  },
+  {
+    "id": "post_4",
+    "type": "carousel",
+    "caption": "Step-by-step illustration tutorial for beginners.",
+    "hashtags": ["#tutorial", "#illustration", "#arttips"],
+    "created_at": "2024-06-04",
+    "likes": 150,
+    "comments": 20
+  },
+  {
+    "id": "post_5",
+    "type": "image",
+    "caption": "Lazy Sunday vibes with my sketchbook and tea.",
+    "hashtags": ["#sundayvibes", "#sketchbook", "#relaxing"],
+    "created_at": "2024-06-05",
+    "likes": 65,
+    "comments": 5
+  },
+  {
+    "id": "post_6",
+    "type": "reel",
+    "caption": "Time-lapse of watercolor painting a forest scene.",
+    "hashtags": ["#watercolor", "#painting", "#timelapse"],
+    "created_at": "2024-06-06",
+    "likes": 110,
+    "comments": 10
+  },
+  {
+    "id": "post_7",
+    "type": "image",
+    "caption": "Close-up details of my latest pencil drawing.",
+    "hashtags": ["#pencildrawing", "#artdetails", "#sketch"],
+    "created_at": "2024-06-07",
+    "likes": 75,
+    "comments": 8
+  },
+  {
+    "id": "post_8",
+    "type": "carousel",
+    "caption": "Before & after: digital coloring process.",
+    "hashtags": ["#digitalart", "#beforeafter", "#artprocess"],
+    "created_at": "2024-06-08",
+    "likes": 140,
+    "comments": 18
+  },
+  {
+    "id": "post_9",
+    "type": "image",
+    "caption": "Coffee and sketches – my favorite morning combo.",
+    "hashtags": ["#coffee", "#sketching", "#morningroutine"],
+    "created_at": "2024-06-09",
+    "likes": 90,
+    "comments": 9
+  },
+  {
+    "id": "post_987",
+    "type": "reel",
+    "caption": "Quick doodle challenge in 60 seconds.",
+    "hashtags": ["#doodle", "#challenge", "#artreel"],
+    "created_at": "2024-06-10",
+    "likes": 130,
+    "comments": 14
   }
 ]

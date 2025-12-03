@@ -3,15 +3,24 @@ from pathlib import Path
 from collections import Counter, defaultdict
 from typing import Tuple
 
-DATA_DIR = Path(__file__).parent.parent / "data"
-POSTS_PATH = DATA_DIR / "posts.json"
+from src.instagram.service import get_my_posts
 
 
 def load_posts() -> list[dict]:
-    if not POSTS_PATH.exists():
-        return []
-    with open(POSTS_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+    posts = get_my_posts()
+    # convert InstaPost → dict compatible with existing stats code
+    return [
+        {
+            "id": p.id,
+            "type": p.type,
+            "caption": p.caption,
+            "hashtags": p.hashtags,
+            "created_at": p.created_at.isoformat(),
+            "likes": p.likes,
+            "comments": p.comments_count,
+        }
+        for p in posts
+    ]
 
 
 def compute_basic_stats(posts: list[dict]) -> Tuple[str, dict]:

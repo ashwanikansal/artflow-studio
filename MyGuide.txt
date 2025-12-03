@@ -19,3 +19,5 @@ Phase 2:
     Earlier our RAG based drawing idea generator, used only our RAG context.
     But now it will use RAG context + trends. So adding trends logic to ideation_module.
 2. Add an Analytics + Feedback Loop module that learns from what has already worked for you and feeds that back into idea generation.
+3. Define Instagram data schemas (Post, Comment, Insights). Implementing it from local posts.json and comments in the local sqlite DB.
+    Test it using debug_test.py file.
