@@ -5,6 +5,10 @@ from pathlib import Path
 # ensure project root is on the path
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 
+from src.instagram.schemas import InstaPost
+from src.instagram.service import get_my_posts, get_post_comments
+
+
 
 import streamlit as st
 from dotenv import load_dotenv
@@ -122,39 +126,99 @@ with tab2:
     st.header("💬 Engagement Assistant")
 
     st.write(
-        "Paste comments from your latest Instagram post. "
-        "The assistant will suggest warm, human replies for each."
+        "You can either paste comments manually, or select one of your posts "
+        "and (later) fetch comments automatically."
     )
 
+    # Select a post from instagram.service
+    st.subheader("Step 1: Choose a post (optional)")
+    try:
+        ig_posts = get_my_posts(limit=10)
+    except Exception as e:
+        st.error(f"Error loading IG posts: {e}")
+        ig_posts = []
+
+    selected_post_id = None
+    if ig_posts:
+        post_options = {f"{p.type} | {p.created_at} | {p.caption[:40]}...": p.id for p in ig_posts}
+        selected_label = st.selectbox(
+            "Select a recent post (optional):",
+            options=["(None)"] + list(post_options.keys()),
+        )
+        if selected_label != "(None)":
+            selected_post_id = post_options[selected_label]
+            st.info(f"Selected post ID: `{selected_post_id}`")
+
+    # --- Manual comments input ---
+    st.subheader("Step 2: Enter comments (or fetch later from IG)")
+    default_post_label = selected_post_id or "2024-12-portrait-reel"
+
     post_id = st.text_input(
-        "Optional: Post ID / short label",
-        placeholder="e.g. 2024-12-portrait-reel",
+        "Post ID / short label (used for logging)",
+        value=default_post_label,
     )
 
     comments_text = st.text_area(
-        "Comments (one per line)",
+        "Comments (one per line, if you want to paste manually)",
         placeholder="Wow this is amazing!!\nBro this style is fire 🔥\nCan you draw my OC?",
         height=200,
     )
 
+    fetch_from_ig = st.checkbox(
+        "Fetch comments from Instagram service for the selected post (if available)",
+        value=False,
+        help="In mock mode, this uses comments logged in your DB with this post_id. "
+             "With real API later, this will call the Graph API."
+    )
+
     if st.button("Generate reply suggestions"):
-        lines = [l.strip() for l in comments_text.split("\n") if l.strip()]
-        if not lines:
-            st.error("Please paste at least one comment.")
-        else:
+
+        from src.utils.schemas import Comment
+
+        # Decide comment source
+        comments: list[Comment] = []
+
+        if fetch_from_ig and selected_post_id:
+            # Use comments via instagram.service
+            try:
+                insta_comments = get_post_comments(selected_post_id)
+            except Exception as e:
+                st.error(f"Error fetching comments from service: {e}")
+                insta_comments = []
+
+            if insta_comments:
+                for c in insta_comments:
+                    comments.append(
+                        Comment(
+                            id=c.id,
+                            text=c.text,
+                            author=c.author,
+                        )
+                    )
+            else:
+                st.warning("No comments found via service; falling back to manual input.")
+
+        if not comments:
+            # Use manual input
+            lines = [l.strip() for l in comments_text.split("\n") if l.strip()]
+            if not lines:
+                st.error("Please either fetch comments or paste at least one comment.")
+                st.stop()
+        
             comments = [
                 Comment(id=f"c{idx+1}", text=text)
                 for idx, text in enumerate(lines)
             ]
 
-            with st.spinner("Generating reply suggestions..."):
-                batch = generate_reply_suggestions(
-                    comments=comments,
-                    post_id=post_id or None,
-                )
+        # run reply suggestion generation
+        with st.spinner("Generating reply suggestions..."):
+            batch = generate_reply_suggestions(
+                comments=comments,
+                post_id=post_id or selected_post_id,
+            )
 
             # Log comments + replies
-            log_comments_and_replies(comments, batch, post_id=post_id or None)
+            log_comments_and_replies(comments, batch, post_id=post_id or selected_post_id)
 
             st.success("Reply suggestions generated.")
 
@@ -171,6 +235,31 @@ with tab2:
 
 with tab3:
     st.header("📜 History Viewer")
+
+    with st.expander("📷 My Instagram posts (via instagram.service)", expanded=False):
+        post_limit = st.slider("How many recent posts to load?", 1, 20, 5, key="ig_post_limit")
+        try:
+            posts: list[InstaPost] = get_my_posts(limit=post_limit)
+        except Exception as e:
+            st.error(f"Error loading posts: {e}")
+            posts = []
+
+        if not posts:
+            st.info("No posts available (check posts.json or IG API config).")
+        else:
+            for p in posts:
+                st.markdown("---")
+                st.markdown(f"**Post ID:** `{p.id}`")
+                st.markdown(f"**Type:** {p.type}")
+                st.markdown(f"**Created at:** {p.created_at}")
+                st.markdown(f"**Likes:** {p.likes} | **Comments:** {p.comments_count}")
+                if p.caption:
+                    st.markdown("**Caption:**")
+                    st.write(p.caption)
+                if p.hashtags:
+                    st.markdown("**Hashtags:**")
+                    st.code(" ".join(p.hashtags))
+
 
     view_choice = st.radio(
         "What do you want to see?",

@@ -21,3 +21,8 @@ Phase 2:
 2. Add an Analytics + Feedback Loop module that learns from what has already worked for you and feeds that back into idea generation.
 3. Define Instagram data schemas (Post, Comment, Insights). Implementing it from local posts.json and comments in the local sqlite DB.
     Test it using debug_test.py file.
+
+Phase 3:
+
+1. Add api client base for fetching live data like posts, comments, insights, etc.
+2. Add a “Instagram posts” section in your Streamlit UI that calls get_my_posts() and shows: caption, likes/comments, creation time
