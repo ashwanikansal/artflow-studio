@@ -1,6 +1,7 @@
 from typing import Optional
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
+from src.analytics.engine import get_analytics_summary_for_prompt
 from src.rag.llm import get_llm
 from src.rag.vector_db import get_vector_store
 from src.trends.schemas import TrendBundle
@@ -80,6 +81,8 @@ def generate_art_ideas(user_hint: Optional[str] = None, num_ideas: int = 3) -> A
     trend_bundle = get_trends(mood_or_tag=user_hint)
     trend_context = format_trend_context(trend_bundle)
 
+    analytics_summary = get_analytics_summary_for_prompt()
+
     user_prompt = """
 You have access to this context about the artist:
 
@@ -91,24 +94,37 @@ And this is the current trend context:
 [TRENDS]
 {trend_context}
 
-The artist says: "{user_hint} or 'no specific request'"
+And this is a basic analytics summary of how their past posts performed:
 
-Generate EXACTLY {num_ideas} ideas that would be exciting for this artist to draw and post on Instagram.
-Each idea SHOULD, when reasonable, make use of AT LEAST ONE of the trends above (song or visual trend)
-but adapted to the artist's own style.
+[ANALYTICS]
+{analytics_summary}
+
+The artist says: "{user_hint}"
+
+Based on ALL of the above, generate EXACTLY {num_ideas} ideas that would be exciting for this artist to draw and post on Instagram.
+Each idea SHOULD balance:
+- staying true to their style,
+- using relevant trends,
+- and leaning towards patterns that historically get better engagement for them, according to the analytics.
 
 If a trend doesn't fit their style at all, you can ignore it, but explain this in `why_it_fits_you`.
 """
 
     template = PromptTemplate(
     template=SYSTEM_PROMPT + user_prompt,
-    input_variables=["style_context", "trend_context", "user_hint", "num_ideas"],
+    input_variables=["style_context", "trend_context", "analytics_summary", "user_hint", "num_ideas"],
     partial_variables={"format_instructions": artIdeaSet_format_instructions()},
 )
     parser = PydanticOutputParser(pydantic_object=ArtIdeaSet)
 
     chain = template | model | parser
 
-    response = chain.invoke({'style_context':style_context, 'trend_context':trend_context,'user_hint':user_hint,'num_ideas':num_ideas})
-    
+    response = chain.invoke({
+        'style_context':style_context, 
+        'trend_context':trend_context, 
+        'analytics_summary':analytics_summary,
+        'user_hint':user_hint,
+        'num_ideas':num_ideas
+        })
+
     return response

@@ -19,6 +19,7 @@ from src.graph.ideation_module import generate_art_ideas
 from src.graph.caption_module import generate_captions_for_idea
 from src.graph.engagement_module import generate_reply_suggestions
 from src.utils.schemas import Comment
+from src.analytics.engine import get_analytics_summary_for_prompt
 
 
 # ---------- INIT ----------
@@ -175,6 +176,10 @@ with tab3:
         "What do you want to see?",
         options=["Recent ideas", "Captions for idea", "Recent reply suggestions"],
     )
+    with st.expander("📈 Overall analytics summary (from posts.json)", expanded=False):
+        summary_text = get_analytics_summary_for_prompt()
+        st.text(summary_text)
+
 
     if view_choice == "Recent ideas":
         limit = st.slider("How many?", 5, 50, 10)
