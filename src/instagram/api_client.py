@@ -1,13 +1,17 @@
+from pathlib import Path
+from dotenv import load_dotenv
 import requests
 from typing import Any, Dict, Optional
 import os
 
-META_API_VERSION = os.getenv("META_API_VERSION", "v19.0")
+env_path = Path(__file__).resolve().parents[2] / ".env"
+load_dotenv(dotenv_path=env_path)
+
+META_API_VERSION = os.getenv("META_API_VERSION", "v24.0")
 ACCESS_TOKEN = os.getenv("INSTAGRAM_ACCESS_TOKEN")  # to be added later
 USER_ID = os.getenv("INSTAGRAM_USER_ID")            # your Instagram Business ID
 
-BASE_URL = f"https://graph.facebook.com/{META_API_VERSION}"
-
+BASE_URL = f"https://graph.instagram.com/{META_API_VERSION}"
 
 class InstagramAPIError(Exception):
     pass
@@ -41,3 +45,12 @@ def ig_get(path: str, params: Optional[Dict[str, Any]] = None) -> Any:
         raise InstagramAPIError(f"Error calling IG API: {resp.text}")
 
     return resp.json()
+
+
+# Example usage:
+
+# response = ig_get(f"/me", params={"fields": "id, user_id, username, followers_count, follows_count, media_count", "access_token": ACCESS_TOKEN})
+# print("Instagram User Info:", response)
+
+response = ig_get(f"{USER_ID}/media", params={"access_token": ACCESS_TOKEN})
+print("Instagram Media Response:", response)

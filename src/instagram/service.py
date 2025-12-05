@@ -6,6 +6,8 @@ import os
 from pathlib import Path
 from typing import List, Optional
 
+from dotenv import load_dotenv
+
 from src.instagram.api_client import USER_ID, ig_get
 from src.instagram.schemas import InstaPost, InstaComment, InstaPostInsights
 from src.db.models import get_session, CommentRecord
@@ -15,7 +17,9 @@ DATA_DIR = Path(__file__).parent.parent / "data"
 POSTS_PATH = DATA_DIR / "posts.json"
 
 # Toggle between mock (local) and real IG Graph API
-USE_REAL_API = os.getenv("USE_REAL_IG_API", "false").lower() == "true"
+env_path = Path(__file__).resolve().parents[2] / ".env"
+load_dotenv(dotenv_path=env_path)
+USE_REAL_IG_API = os.getenv("USE_REAL_IG_API", "false").lower() == "true"
 
 # ================= MOCK IMPLEMENTATION (LOCAL DATA) =================
 
@@ -282,27 +286,29 @@ def get_my_posts(limit: Optional[int] = None) -> List[InstaPost]:
     """
     Public function for the rest of the app.
 
-    If USE_REAL_API=true → use live Graph API.
+    If USE_REAL_IG_API=true → use live Graph API.
     Else → use local mock posts.json.
     """
-    if USE_REAL_API:
+    print("USE_REAL_IG_API =", USE_REAL_IG_API)
+    if USE_REAL_IG_API:
         return get_my_posts_live(limit=limit)
     return get_my_posts_mock(limit=limit)
 
 
+
 def get_post_by_id(post_id: str) -> Optional[InstaPost]:
-    if USE_REAL_API:
+    if USE_REAL_IG_API:
         return get_post_by_id_live(post_id)
     return get_post_by_id_mock(post_id)
 
 
 def get_post_insights(post_id: str) -> Optional[InstaPostInsights]:
-    if USE_REAL_API:
+    if USE_REAL_IG_API:
         return get_post_insights_live(post_id)
     return get_post_insights_mock(post_id)
 
 
 def get_post_comments(post_id: str, limit: Optional[int] = None) -> List[InstaComment]:
-    if USE_REAL_API:
+    if USE_REAL_IG_API:
         return get_post_comments_live(post_id, limit=limit)
     return get_post_comments_mock(post_id, limit=limit)
